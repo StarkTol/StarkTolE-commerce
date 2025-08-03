@@ -14,13 +14,13 @@ export const userCreatedHandler = inngest.createFunction(
         await connectDB();
         
         // Check if user already exists
-        const existingUser = await User.findById(data.id);
+        const existingUser = await (User as any).findById(data.id);
         
         if (existingUser) {
           console.log(`User ${data.id} already exists, updating...`);
           
           // Update existing user
-          const updatedUser = await User.findByIdAndUpdate(
+          const updatedUser = await (User as any).findByIdAndUpdate(
             data.id,
             {
               name: data.first_name + " " + (data.last_name || ""),
@@ -35,7 +35,7 @@ export const userCreatedHandler = inngest.createFunction(
           console.log(`Creating new user ${data.id}...`);
           
           // Create new user
-          const newUser = await User.create({
+          const newUser = await (User as any).create({
             _id: data.id,
             name: data.first_name + " " + (data.last_name || ""),
             email: data.email_addresses[0]?.email_address || "",

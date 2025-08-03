@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await connectDB();
-    const users = await User.find({}).select('-cartItems'); // Don't expose cart items in list
+    const users = await (User as any).find({}).select('-cartItems'); // Don't expose cart items in list
     return NextResponse.json({ success: true, users });
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
     
-    const newUser = await User.create({
+    const newUser = await (User as any).create({
       _id: body.id || `user_${Date.now()}`,
       name: body.name || "Test User",
       email: body.email || "test@example.com",
