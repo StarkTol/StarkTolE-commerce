@@ -8,14 +8,19 @@ export async function syncUserWithDB(clerkUser: any) {
 
   const primaryEmail = email_addresses?.[0]?.email_address || "";
 
-  await User.findOneAndUpdate(
-    { _id: id },
-    {
-      _id: id,
-      name: full_name || "",
-      email: primaryEmail,
-      imageUrl: image_url,
-    },
-    { upsert: true, new: true }
-  );
+  try {
+    await User.findOneAndUpdate(
+      { _id: id },
+      {
+        name: full_name || "",
+        email: primaryEmail,
+        imageUrl: image_url || "",
+        cartItems: {},
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+  } catch (error) {
+    console.error("Error syncing user with database:", error);
+    throw error;
+  }
 }
