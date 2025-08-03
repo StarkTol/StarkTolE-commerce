@@ -12,8 +12,15 @@ const nextConfig = {
                 hostname: 'raw.githubusercontent.com',
                 pathname: '**',
             },
+            {
+                protocol: 'https',
+                hostname: 'via.placeholder.com',
+                pathname: '**',
+            },
         ],
     },
+    // Ensure proper server configuration for Render
+    output: 'standalone',
 };
 
 export default nextConfig;
