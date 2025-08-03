@@ -15,8 +15,8 @@ export async function syncUserWithDB(user: ClerkUser) {
     const { id, email_addresses, image_url, username } = user;
     const primaryEmail = email_addresses?.[0]?.email_address || "";
 
-    // Find existing user first
-    const existingUser = await User.findById(id);
+    // Using type assertion to bypass TypeScript issues with Mongoose
+    const existingUser = await (User as any).findById(id);
     
     if (existingUser) {
       // Update existing user
@@ -25,8 +25,8 @@ export async function syncUserWithDB(user: ClerkUser) {
       existingUser.name = username || "New User";
       await existingUser.save();
     } else {
-      // Create new user
-      const newUser = new User({
+      // Create new user using type assertion
+      const newUser = new (User as any)({
         _id: id,
         email: primaryEmail,
         imageUrl: image_url,
