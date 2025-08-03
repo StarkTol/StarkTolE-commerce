@@ -7,8 +7,8 @@ import { Toaster } from "react-hot-toast";
 const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] });
 
 export const metadata = {
-  title: "QuickCart - GreatStack",
-  description: "E-Commerce with Next.js ",
+  title: "StarkTol E-commerce - Premium Shopping Experience",
+  description: "StarkTol E-commerce - Your premier destination for premium electronics, gadgets, and accessories with Next.js",
 };
 
 export default function RootLayout({ children }) {
