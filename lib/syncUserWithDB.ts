@@ -1,33 +1,36 @@
-import connectDB from "@/config/db";
+import { connectDB } from "@/config/db";
 import User from "@/models/User";
 
-export async function syncUserWithDB(clerkUser: any) {
-  await connectDB();
+interface ClerkUser {
+  id: string;
+  email_addresses: { email_address: string }[];
+  image_url: string;
+  username?: string;
+}
 
-  const { id, email_addresses, image_url, full_name } = clerkUser;
-
-  const primaryEmail = email_addresses?.[0]?.email_address || "";
-
+export async function syncUserWithDB(user: ClerkUser) {
   try {
-    // Use type assertion to bypass TypeScript union type issues
-    const UserModel = User as any;
-    
-    await UserModel.updateOne(
+    await connectDB();
+
+    const { id, email_addresses, image_url, username } = user;
+    const primaryEmail = email_addresses?.[0]?.email_address || "";
+
+    // Using updateOne instead of updateById for simpler TypeScript compatibility
+    await User.updateOne(
       { _id: id },
       {
         $set: {
-          name: full_name || "",
+          _id: id,
           email: primaryEmail,
-          imageUrl: image_url || "",
+          imageUrl: image_url,
+          name: username || "New User",
         },
-        $setOnInsert: {
-          cartItems: {},
-        }
       },
       { upsert: true }
     );
+
+    console.log(`User ${id} synced with DB`);
   } catch (error) {
-    console.error("Error syncing user with database:", error);
-    throw error;
+    console.error("Error syncing user with DB:", error);
   }
 }
