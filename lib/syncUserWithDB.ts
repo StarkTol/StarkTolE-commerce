@@ -9,15 +9,20 @@ export async function syncUserWithDB(clerkUser: any) {
   const primaryEmail = email_addresses?.[0]?.email_address || "";
 
   try {
-    await User.findOneAndUpdate(
+    // Use updateOne with upsert instead of findOneAndUpdate to avoid TypeScript issues
+    await User.updateOne(
       { _id: id },
       {
-        name: full_name || "",
-        email: primaryEmail,
-        imageUrl: image_url || "",
-        cartItems: {},
+        $set: {
+          name: full_name || "",
+          email: primaryEmail,
+          imageUrl: image_url || "",
+        },
+        $setOnInsert: {
+          cartItems: {},
+        }
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true }
     );
   } catch (error) {
     console.error("Error syncing user with database:", error);
