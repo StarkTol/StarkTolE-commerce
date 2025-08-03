@@ -7,10 +7,14 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/api/webhook/clerk',
+  '/api/inngest',
+  '/api/health',
+  '/api/users',
+  '/api/upload',
+  '/api/test-db',
+  '/api/send-event',
   '/all-products',
   '/product/(.*)',
-  '/api/upload',
-  '/api/test-db'
 ]);
 
 // Define admin/seller routes
