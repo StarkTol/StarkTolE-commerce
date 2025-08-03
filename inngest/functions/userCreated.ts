@@ -1,54 +1,28 @@
-// inngest/functions/userCreated.ts
-import { inngest } from "../../config/inngest";
-import { connectDB } from "../../lib/mongo";
-import User from "../../models/User.js";
+import { inngest } from "@/config/inngest";
+import { connectDB } from "@/lib/mongo";
+import User from "@/models/User";
 
-export const userCreatedHandler = inngest.createFunction(
-  { id: "user-created-handler" },
-  { event: "user.created" },
+export const userCreated = inngest.createFunction(
+  { id: "sync-user-to-db" },
+  { event: "clerk.user.created" },
   async ({ event, step }) => {
-    const { data } = event;
-    
-    return await step.run("sync-user-to-database", async () => {
-      try {
-        await connectDB();
-        
-        // Check if user already exists
-        const existingUser = await (User as any).findById(data.id);
-        
-        if (existingUser) {
-          console.log(`User ${data.id} already exists, updating...`);
-          
-          // Update existing user
-          const updatedUser = await (User as any).findByIdAndUpdate(
-            data.id,
-            {
-              name: data.first_name + " " + (data.last_name || ""),
-              email: data.email_addresses[0]?.email_address || "",
-              imageUrl: data.image_url || "",
-            },
-            { new: true }
-          );
-          
-          return { message: "User updated successfully", user: updatedUser };
-        } else {
-          console.log(`Creating new user ${data.id}...`);
-          
-          // Create new user
-          const newUser = await (User as any).create({
-            _id: data.id,
-            name: data.first_name + " " + (data.last_name || ""),
-            email: data.email_addresses[0]?.email_address || "",
-            imageUrl: data.image_url || "",
-            cartItems: {},
-          });
-          
-          return { message: "User created successfully", user: newUser };
-        }
-      } catch (error) {
-        console.error("Error syncing user:", error);
-        throw error;
-      }
-    });
+    await connectDB();
+
+    const { id, email_addresses, image_url, username } = event.data;
+
+    await User.updateOne(
+      { _id: id },
+      {
+        $set: {
+          _id: id,
+          email: email_addresses?.[0]?.email_address,
+          name: username,
+          imageUrl: image_url,
+        },
+      },
+      { upsert: true }
+    );
+
+    return { message: "User synced to MongoDB" };
   }
 );
