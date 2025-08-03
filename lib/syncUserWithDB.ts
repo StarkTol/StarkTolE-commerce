@@ -8,8 +8,8 @@ export async function syncUserWithDB(clerkUser: any) {
 
   const primaryEmail = email_addresses?.[0]?.email_address || "";
 
-  await User.findByIdAndUpdate(
-    id,
+  await User.findOneAndUpdate(
+    { _id: id },
     {
       _id: id,
       name: full_name || "",
