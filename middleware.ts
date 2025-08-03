@@ -12,6 +12,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/users',
   '/api/upload',
   '/api/test-db',
+  '/api/test-inngest',
   '/api/send-event',
   '/all-products',
   '/product/(.*)',
