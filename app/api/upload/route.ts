@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // Dynamic import for cloudinary to avoid module resolution issues
     const { v2: cloudinary } = await import("cloudinary");
@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<NextResponse>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: "products" },
         (error, result) => {
           if (error || !result) {
-            reject(
+            resolve(
               NextResponse.json(
                 { error: error?.message || "Upload failed" },
                 { status: 500 }
