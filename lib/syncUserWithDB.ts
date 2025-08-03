@@ -9,8 +9,10 @@ export async function syncUserWithDB(clerkUser: any) {
   const primaryEmail = email_addresses?.[0]?.email_address || "";
 
   try {
-    // Use updateOne with upsert instead of findOneAndUpdate to avoid TypeScript issues
-    await User.updateOne(
+    // Use type assertion to bypass TypeScript union type issues
+    const UserModel = User as any;
+    
+    await UserModel.updateOne(
       { _id: id },
       {
         $set: {
