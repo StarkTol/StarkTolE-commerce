@@ -1,3 +1,4 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
@@ -12,13 +13,28 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${outfit.className} antialiased text-gray-700`}>
-        <Toaster />
-        <AppContextProvider>
-          {children}
-        </AppContextProvider>
-      </body>
-    </html>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        baseTheme: undefined,
+        variables: {
+          colorPrimary: '#ea580c',
+          colorText: '#1f2937',
+        },
+        elements: {
+          formButtonPrimary: 'bg-orange-600 hover:bg-orange-700',
+          card: 'shadow-lg',
+        },
+      }}
+    >
+      <html lang="en">
+        <body className={`${outfit.className} antialiased text-gray-700`}>
+          <Toaster />
+          <AppContextProvider>
+            {children}
+          </AppContextProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
