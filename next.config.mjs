@@ -14,6 +14,9 @@ const nextConfig = {
             },
         ],
     },
+    experimental: {
+        serverExternalPackages: ['cloudinary'],
+    },
 };
 
 export default nextConfig;
