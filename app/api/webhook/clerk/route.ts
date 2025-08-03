@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
-import { syncUserWithDB } from '@/lib/syncUserWithDB';
+import { inngest } from '@/config/inngest';
 
 type WebhookEvent = {
   data: {
@@ -54,7 +54,18 @@ export async function POST(req: NextRequest) {
   const eventType = evt.type;
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
-    await syncUserWithDB(evt.data);
+    try {
+      // Send event to Inngest for processing
+      await inngest.send({
+        name: "user.created",
+        data: evt.data,
+      });
+      
+      console.log(`Sent ${eventType} event to Inngest for user ${evt.data.id}`);
+    } catch (error) {
+      console.error('Error sending event to Inngest:', error);
+      // Don't fail the webhook if Inngest fails
+    }
   }
 
   return NextResponse.json({ received: true });
