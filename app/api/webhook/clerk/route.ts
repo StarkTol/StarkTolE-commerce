@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
       
       // Send event to Inngest for processing
       const inngestResult = await inngest.send({
-        name: "user.created",
+        name: "clerk/user.created",
         data: evt.data,
       });
       
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       
       // Send deletion event to Inngest for processing
       const inngestResult = await inngest.send({
-        name: "user.deleted",
+        name: "clerk/user.deleted",
         data: evt.data,
       });
       

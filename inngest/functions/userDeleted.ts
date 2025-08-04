@@ -4,7 +4,7 @@ import User from "@/models/User";
 
 export const userDeleted = inngest.createFunction(
   { id: "delete-user-from-db" },
-  { event: "user.deleted" },
+  { event: "clerk/user.deleted" },
   async ({ event, step }) => {
     console.log("Processing user deletion event:", event.data);
     

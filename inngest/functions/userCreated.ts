@@ -4,7 +4,7 @@ import User from "@/models/User";
 
 export const userCreated = inngest.createFunction(
   { id: "sync-user-to-db" },
-  { event: "user.created" },
+  { event: "clerk/user.created" },
   async ({ event, step }) => {
     console.log("Processing user creation event:", event.data);
     
