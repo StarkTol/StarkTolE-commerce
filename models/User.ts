@@ -1,15 +1,17 @@
 // models/User.ts
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Model } from "mongoose";
 
-export interface IUser {
+export interface IUser extends Document {
   _id: string;
   name: string;
   email: string;
   imageUrl: string;
   cartItems: Record<string, number>;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     _id: { type: String, required: true },
     name: { type: String, required: true },
@@ -23,6 +25,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;

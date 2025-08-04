@@ -2,12 +2,16 @@
   "name": "starktol-ecommerce",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.17.0 <23.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
     "lint": "next lint",
-    "postinstall": "next build",
+    "postinstall": "npm run build:production",
+    "build:production": "SKIP_ENV_VALIDATION=true next build",
     "inngest:dev": "npx inngest-cli dev -u http://localhost:3000/api/inngest --no-discovery"
   },
   "dependencies": {

@@ -16,7 +16,7 @@ export async function GET() {
     console.log(`Found ${userCount} users in database`);
     
     // Get all users (limit to 10 for testing)
-    const users = await User.find({}).limit(10).select('_id name email imageUrl createdAt updatedAt');
+    const users = await User.find({}, '_id name email imageUrl createdAt updatedAt').limit(10);
     console.log("Users found:", users);
     
     return NextResponse.json({
@@ -26,13 +26,13 @@ export async function GET() {
       users,
       databaseName: "starktol-ecommerce"
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Database test failed:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message,
-        stack: error.stack
+        error: error?.message || 'Unknown error occurred',
+        stack: error?.stack
       },
       { status: 500 }
     );
@@ -60,12 +60,12 @@ export async function POST() {
       message: "Test user created successfully",
       user: result
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to create test user:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message
+        error: error?.message || 'Unknown error occurred'
       },
       { status: 500 }
     );
