@@ -5,8 +5,16 @@ import { Inngest } from "inngest";
 export const inngest = new Inngest({
   id: "starktol-ecommerce-app",
   name: "StarkTol E-commerce",
-  isDev: process.env.NODE_ENV !== "production",
-  eventKey: process.env.INNGEST_EVENT_KEY,
-  signingKey: process.env.INNGEST_SIGNING_KEY,
+  // Use environment-based configuration
+  isDev: process.env.NODE_ENV === "development",
+  // Production keys for deployed environment
+  ...(process.env.NODE_ENV === "production" && {
+    eventKey: process.env.INNGEST_EVENT_KEY,
+    signingKey: process.env.INNGEST_SIGNING_KEY,
+  }),
+  // Local dev server for development
+  ...(process.env.NODE_ENV === "development" && {
+    devServerURL: "http://127.0.0.1:8288",
+  }),
   fetch: globalThis.fetch,
 });
