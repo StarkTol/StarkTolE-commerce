@@ -3,10 +3,13 @@ import { connectDB } from "@/lib/mongo";
 import User from "@/models/User";
 
 export const userDeleted = inngest.createFunction(
-  { id: "delete-user-from-db-v3" },
-  { event: ["clerk/user.deleted", "user.deleted"] },
+  { 
+    id: "user-deleted-cleanup",
+    name: "Delete User Cleanup",
+  },
+  { event: "clerk/user.deleted" },
   async ({ event, step }) => {
-    console.log("Processing user deletion event:", event.data);
+    console.log("🗑️ [USER DELETED] Processing event:", event.name, event.data);
     
     await step.run("connect-to-db", async () => {
       return await connectDB();

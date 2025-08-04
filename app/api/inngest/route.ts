@@ -1,10 +1,11 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/config/inngest";
-import { testFunction } from "@/inngest/functions/testFunction";
 import { userCreated } from "@/inngest/functions/userCreated";
 import { userDeleted } from "@/inngest/functions/userDeleted";
+import { testFunction } from "@/inngest/functions/testFunction";
 
+// Serve all functions with explicit imports to avoid circular dependencies
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [testFunction, userCreated, userDeleted],
+  functions: [userCreated, userDeleted, testFunction],
 });
