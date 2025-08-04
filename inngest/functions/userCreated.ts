@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongo";
 import User from "@/models/User";
 
 export const userCreated = inngest.createFunction(
-  { id: "sync-user-to-db" },
+  { id: "sync-user-to-db-v2" },
   { event: "clerk/user.created" },
   async ({ event, step }) => {
     console.log("Processing user creation event:", event.data);
